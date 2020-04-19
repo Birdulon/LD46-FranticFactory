@@ -1,11 +1,12 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://kb2dladder.gd" type="Script" id=1]
+[ext_resource path="res://object.gd" type="Script" id=1]
 [ext_resource path="res://assets/sprites/iron_ladder.tres" type="Texture" id=2]
 
 [node name="SmallLadder" type="KinematicBody2D"]
 input_pickable = true
 script = ExtResource( 1 )
+material_type = 3
 rungs = 3
 cx = 2.35
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://kb2dladder.gd" type="Script" id=1]
+[ext_resource path="res://object.gd" type="Script" id=1]
 [ext_resource path="res://assets/sprites/iron_ore.tres" type="Texture" id=2]
 
 [node name="IronOre" type="KinematicBody2D"]
