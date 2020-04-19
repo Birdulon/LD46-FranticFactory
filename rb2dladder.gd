@@ -17,7 +17,7 @@ var total_weight = 7
 
 
 func _ready():
-	friction = 1
+#	friction = 1
 	linear_damp = 2
 	angular_damp = 100
 
@@ -43,20 +43,31 @@ func get_belt_rect(vec):
 #func _process(delta):
 #	var belt_speed = delta * 8
 func _physics_process(delta):
-	var belt_speed = 8 * 24
+	var belt_speed = 8 * 64
 	var direction = Vector2(0, 0)
 	set_applied_force(Vector2(0,0))
 	set_applied_torque(0)
+	angular_velocity = 0
+	var friction_points = []
 	for i in len(foot_vectors):
 		var vec = beltmap.world_to_map(position + foot_vectors[i].rotated(rotation))
 		if beltmap.get_cell(vec.x, vec.y) >= 0:
 			add_force(vec - position, belt_speed*dir_vectors[get_belt_direction(vec.x, vec.y)]/total_weight)
 			#direction += dir_vectors[get_belt_direction(vec.x, vec.y)] * foot_weights[i]
+		else:
+			friction_points.append(vec - position)
 #	position += direction/total_weight * belt_speed
 	if held:
 		var ggv = to_global(grabbed_vector)
 		var dv = get_global_mouse_position() - ggv
-		add_force(grabbed_vector, dv * dv.abs() *friction*linear_damp)
+		add_force(grabbed_vector, dv * dv.length()*linear_damp)
+
+	var f = get_applied_force() + linear_velocity*mass
+	var fn = f.normalized()
+	var fmag = f.length()
+	var f_max = 200
+	for p in friction_points:
+		add_force(p, -fn * min(f_max, fmag/total_weight))
 
 
 #func _input_event(_viewport, event, _shape_idx):
