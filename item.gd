@@ -5,9 +5,9 @@ onready var beltmap = $"../BeltTiles"
 
 var dir_vectors = [Vector2(1,0), Vector2(0,-1), Vector2(-1,0), Vector2(0,1)]
 
-var cx := 5  # offset for edge feet
-var cy := 5  # offset for edge feet
-var foot_vectors = [Vector2(0,0), Vector2(cx,cy), Vector2(cx,-cy), Vector2(-cx,-cy), Vector2(-cx,cy)]
+export var cx := 5  # offset for edge feet
+export var cy := 5  # offset for edge feet
+onready var foot_vectors = [Vector2(0,0), Vector2(cx,cy), Vector2(cx,-cy), Vector2(-cx,-cy), Vector2(-cx,cy)]
 var foot_weights = [3, 1, 1, 1, 1]
 var total_weight = 7
 #var stuck_vec = null
@@ -29,7 +29,7 @@ func _process(delta):
 
 	var direction = Vector2(0, 0)
 	for i in len(foot_vectors):
-		var vec = beltmap.world_to_map(position + foot_vectors[i])
+		var vec = beltmap.world_to_map(position + foot_vectors[i].rotated(rotation))
 		if beltmap.get_cell(vec.x, vec.y) >= 0:
 			direction += dir_vectors[get_belt_direction(vec.x, vec.y)] * foot_weights[i]
 	position += direction/total_weight * belt_speed
