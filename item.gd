@@ -34,22 +34,6 @@ func _process(delta):
 			direction += dir_vectors[get_belt_direction(vec.x, vec.y)] * foot_weights[i]
 	position += direction/total_weight * belt_speed
 
-#	var vec = beltmap.world_to_map(position)
-#	if stuck_vec:
-#		if get_rect().intersects(get_belt_rect(stuck_vec)):
-#			position += dir_vectors[stuck_dir] * belt_speed
-#			return
-#		else:
-#			stuck_vec = null
-#			stuck_dir = -1
-
-#	var tx = vec[0]
-#	var ty = vec[1]
-#	if beltmap.get_cell(tx, ty) >= 0:
-#		stuck_dir = get_belt_direction(tx, ty)
-#		stuck_vec = vec
-#		position += dir_vectors[stuck_dir] * belt_speed
-
 
 func _input(event):
 	if event is InputEventMouseButton:

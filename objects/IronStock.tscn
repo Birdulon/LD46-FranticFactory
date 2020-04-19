@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://kb2dladder.gd" type="Script" id=1]
+[ext_resource path="res://assets/sprites/iron_stock.tres" type="Texture" id=2]
+
+[node name="IronStock" type="KinematicBody2D"]
+input_pickable = true
+script = ExtResource( 1 )
+rungs = 3
+cx = 2.35
+cy = 3.0
+
+[node name="CS2D" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( -7, -3, -7, 3, 7, 3, 7, -3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+region_rect = Rect2( 80, 240, 32, 16 )
+__meta__ = {
+"_edit_lock_": true
+}
