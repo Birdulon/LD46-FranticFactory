@@ -69,13 +69,29 @@ func game_over():
 	map = null
 
 const FLOOR = 1
+var belt_dirs = [  # v2 is widebelt second tile offset
+	{v=Vector2(1, 0), v2=Vector2(0,1), fx=false, fy=false, t=false},
+	{v=Vector2(0, 1), v2=Vector2(1,0), fx=true, fy=false, t=true},
+	{v=Vector2(-1,0), v2=Vector2(0,1), fx=true, fy=true, t=false},
+	{v=Vector2(0,-1), v2=Vector2(1,0), fx=false, fy=true, t=true}
+]
+var cursor_sprites = [
+	null,
+	load('res://assets/sprites/belt.tres'),
+	load('res://assets/sprites/channel.tres'),
+	load('res://assets/sprites/2x2belt.tres'),
+	load('res://assets/sprites/smelter.tres'),
+	load('res://assets/sprites/forge.tres'),
+	load('res://assets/sprites/lathe.tres'),
+	load('res://assets/sprites/welder.tres'),
+]
+var machines = {
+	4: load('res://machines/Smelter.tscn'),
+	5: load('res://machines/Forge.tscn'),
+	6: load('res://machines/Lathe.tscn'),
+	7: load('res://machines/Welder.tscn')
+}
 func _input(event):
-	var belt_dirs = [  # v2 is widebelt second tile offset
-		{v=Vector2(1, 0), v2=Vector2(0,1), fx=false, fy=false, t=false},
-		{v=Vector2(0, 1), v2=Vector2(1,0), fx=true, fy=false, t=true},
-		{v=Vector2(-1,0), v2=Vector2(0,1), fx=true, fy=true, t=false},
-		{v=Vector2(0,-1), v2=Vector2(1,0), fx=false, fy=true, t=true}
-	]
 	if not map:
 		return
 	var Tiles: TileMap = map.get_node("TileMap")
@@ -113,5 +129,35 @@ func _input(event):
 						if Tiles.get_cellv(grid_index + offset) == FLOOR:
 							BeltTiles.set_cellv(grid_index + offset, -1)
 		else:
-			pass
+			if event is InputEventMouseButton:
+				if event.button_mask & BUTTON_MASK_LEFT:
+					var px_size = cursor_sprites[p1_selection].get_size()
+					var cell_size = px_size / 8
+					for i in cell_size.x:
+						for j in cell_size.y:
+							if not check_tile_buildable(grid_index + Vector2(i, j)):
+								return
+					var target_rect = Rect2(pos, px_size)
+					for machine in map.get_node("Machines").get_children():
+						if target_rect.intersects(machine.get_global_rect()):
+							return false  # Check if any overlap
+					var machine = machines[p1_selection].instance()
+					machine.position = pos + px_size/2
+					map.get_node("Machines").add_child(machine)
+				elif event.button_mask & BUTTON_MASK_RIGHT:
+					# Delete a machine underneath, but only if it has never worked
+					for machine in map.get_node("Machines").get_children():
+						if machine.get_global_rect().has_point(event.position):
+							if not machine.was_started:
+								map.get_node("Machines").remove_child(machine)
+								machine.queue_free()
+							return false
 
+
+func check_tile_buildable(grid_index):
+	if not map:
+		return
+	var Tiles: TileMap = map.get_node("TileMap")
+	if Tiles.get_cellv(grid_index) != FLOOR:
+		return false
+	return true

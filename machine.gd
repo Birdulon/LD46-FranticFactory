@@ -26,6 +26,9 @@ func get_belt_direction(tx, ty):
 	var tp = beltmap.is_cell_transposed(tx, ty)
 	return int(tp) + int(xflip)*2
 
+func get_global_rect():
+	return Rect2(to_global(rect.position), rect.size)
+
 onready var recipe = Constants.RECIPES[machine_type]
 func _ready():
 	var top_left_corner_tile = position - Vector2(width/2-4, height/2-4)
