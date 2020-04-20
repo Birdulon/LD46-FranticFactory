@@ -13,7 +13,7 @@ onready var width = rect.size.x
 onready var height = rect.size.y
 onready var w_cells = width/8
 onready var h_cells = height/8
-onready var beltmap = $"/root/Main/TileMap/BeltTiles"
+onready var beltmap = $"../../BeltTiles"
 var surrounding_tilename_indices
 var surrounding_tilename_indices_internal
 var surrounding_tilename_indices_dir
@@ -116,7 +116,7 @@ func output():
 				product.rotation_degrees = dir_angles[surrounding_tilename_indices_dir[i]]
 				outpos -= dir_vectors[surrounding_tilename_indices_dir[i]]  # Hack to make feed exit work
 				product.leave_machine(self, outpos)
-				$"/root/Main/TileMap/Objects".add_child(product)
+				$"../../Objects".add_child(product)
 				return
 
 func set_working(state):

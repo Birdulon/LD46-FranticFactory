@@ -8,7 +8,7 @@ var leaving_machine = null
 var feed_position: Vector2
 var held = false
 var grabbed_vector = null
-onready var beltmap = $"/root/Main/TileMap/BeltTiles"
+onready var beltmap = $"../../BeltTiles"
 
 var dir_vectors = [Vector2(1,0), Vector2(0,-1), Vector2(-1,0), Vector2(0,1)]
 
@@ -51,7 +51,8 @@ func _physics_process(delta):
 	var belt_speed = 8
 
 	if entering_machine:
-		move_and_slide(position.direction_to(feed_position) * belt_speed)
+		# move_and_slide(position.direction_to(feed_position) * belt_speed) # Don't want it getting stuck on other feed objects
+		position += (position.direction_to(feed_position) * belt_speed * delta)
 		if position.distance_to(feed_position) <= 1.0:
 			entering_machine.feed(self)
 		return
