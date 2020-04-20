@@ -8,7 +8,7 @@ var leaving_machine = null
 var feed_position: Vector2
 var held = false
 var grabbed_vector = null
-onready var beltmap = $"../BeltTiles"
+onready var beltmap = $"/root/Main/TileMap/BeltTiles"
 
 var dir_vectors = [Vector2(1,0), Vector2(0,-1), Vector2(-1,0), Vector2(0,1)]
 
@@ -19,6 +19,7 @@ export var cy := 5.0  # offset for edge feet
 var foot_vectors
 var foot_weights
 var total_weight
+onready var rect = $sprite.get_rect()
 #var stuck_vec = null
 #var stuck_dir = -1  # For going off the end of belts
 
@@ -51,10 +52,13 @@ func _physics_process(delta):
 
 	if entering_machine:
 		move_and_slide(position.direction_to(feed_position) * belt_speed)
+		if position.distance_to(feed_position) <= 1.0:
+			entering_machine.feed(self)
 		return
 	elif leaving_machine:
-		move_and_slide(feed_position.direction_to(position) * belt_speed)
-		if position.distance_to(feed_position) > $sprite.width/2:
+		var dir = feed_position.direction_to(position)
+		move_and_slide(dir * belt_speed)
+		if position.distance_to(feed_position) > rect.size.x/2 + 9:
 			remove_collision_exception_with(leaving_machine)
 			leaving_machine = null
 		return
@@ -97,16 +101,18 @@ func _input(event):
 	if event is InputEventMouseButton:
 		if not event.pressed:
 			held = false
-		elif $sprite.get_rect().has_point(to_local(event.position)):
+		elif rect.has_point(to_local(event.position)) and event.button_mask & BUTTON_MASK_LEFT and $"/root/Main".p1_selection == 0:
 			held = true
 			grabbed_vector = to_local(event.position)
 
 
-func enter_machine(machine):
+func enter_machine(machine, feed_vec):
 	add_collision_exception_with(machine)
 	entering_machine = machine
+	self.feed_position = feed_vec
 	held = false
 
-func leave_machine(machine):
+func leave_machine(machine, feed_vec):
 	add_collision_exception_with(machine)
 	leaving_machine = machine
+	self.feed_position = feed_vec
