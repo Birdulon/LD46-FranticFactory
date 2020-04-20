@@ -67,3 +67,51 @@ func game_over():
 	remove_child(map)
 	map.queue_free()
 	map = null
+
+const FLOOR = 1
+func _input(event):
+	var belt_dirs = [  # v2 is widebelt second tile offset
+		{v=Vector2(1, 0), v2=Vector2(0,1), fx=false, fy=false, t=false},
+		{v=Vector2(0, 1), v2=Vector2(1,0), fx=true, fy=false, t=true},
+		{v=Vector2(-1,0), v2=Vector2(0,1), fx=true, fy=true, t=false},
+		{v=Vector2(0,-1), v2=Vector2(1,0), fx=false, fy=true, t=true}
+	]
+	if not map:
+		return
+	var Tiles: TileMap = map.get_node("TileMap")
+	var BeltTiles: TileMap = map.get_node("BeltTiles")
+	var belt_types = {1: 0, 2: 4, 3: 1} # 2 for secondary wide (3)
+	if event is InputEventMouse:
+		if p1_selection <= 0:
+			return
+		var pos = get_cursor_snapped_position()
+		if pos.x < 0:
+			return
+		var grid_index = BeltTiles.world_to_map(pos + Vector2(4,4))
+
+		if p1_selection <= 3:
+			if event.button_mask & BUTTON_MASK_LEFT:
+				if event is InputEventMouseMotion:
+					var dir = int(fposmod(round((event.relative.angle()/TAU)*4), 4))
+					var d = belt_dirs[dir]
+					if Tiles.get_cellv(grid_index) == FLOOR:
+						if p1_selection == 3:
+							if Tiles.get_cellv(grid_index+d.v2) == FLOOR:
+								if dir == 0 or dir == 3:
+									BeltTiles.set_cellv(grid_index, 1, d.fx, d.fy, d.t)
+									BeltTiles.set_cellv(grid_index+d.v2, 2, d.fx, d.fy, d.t)
+								else:
+									BeltTiles.set_cellv(grid_index, 2, d.fx, d.fy, d.t)
+									BeltTiles.set_cellv(grid_index+d.v2, 1, d.fx, d.fy, d.t)
+						else:
+							BeltTiles.set_cellv(grid_index, belt_types[p1_selection], d.fx, d.fy, d.t)
+			elif event.button_mask & BUTTON_MASK_RIGHT:
+				if Tiles.get_cellv(grid_index) == FLOOR:
+					BeltTiles.set_cellv(grid_index, -1)
+				if p1_selection == 3:
+					for offset in [Vector2(1,0), Vector2(0,1), Vector2(1,1)]:
+						if Tiles.get_cellv(grid_index + offset) == FLOOR:
+							BeltTiles.set_cellv(grid_index + offset, -1)
+		else:
+			pass
+

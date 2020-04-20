@@ -96,7 +96,7 @@ texture = ExtResource( 2 )
 [node name="BGMSlider" type="HBoxContainer" parent="."]
 show_behind_parent = true
 margin_left = 192.0
-margin_right = 480.0
+margin_right = 360.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -116,7 +116,7 @@ text = "BGM"
 show_behind_parent = true
 margin_left = 29.0
 margin_top = 5.0
-margin_right = 288.0
+margin_right = 168.0
 margin_bottom = 10.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
