@@ -63,9 +63,9 @@ func _process(delta):
 			return
 
 	if num_inputs <= 0:
+		self.working = false
 		if not was_started:
 			return
-		self.working = false
 		idle_time += delta
 		if idle_time >= max_idle_time:
 			$"/root/Main".game_over()

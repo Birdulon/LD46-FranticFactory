@@ -20,7 +20,7 @@ script = ExtResource( 25 )
 stream = ExtResource( 10 )
 
 [node name="GUI" type="Control" parent="."]
-margin_right = 480.0
+margin_right = 360.0
 margin_bottom = 360.0
 mouse_filter = 1
 script = ExtResource( 27 )
