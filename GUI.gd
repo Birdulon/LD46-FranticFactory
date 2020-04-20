@@ -26,11 +26,9 @@ func _draw():
 	draw_texture(cursor, pos1, Color.yellow)
 
 	if p1_s > 0:
-		var mouse_pos = get_viewport().get_mouse_position()
-		if $Hotbar.get_rect().has_point(mouse_pos):
-			return
-		mouse_pos = Vector2(floor(mouse_pos.x/8)*8, floor(mouse_pos.y/8)*8)
-		draw_texture(cursor_sprites[p1_s], mouse_pos, Color(0.75, 0.75, 0.75, 0.75))
+		var mouse_pos = get_parent().get_cursor_snapped_position()
+		if mouse_pos.x >= 0:  # Not much point checking y too
+			draw_texture(cursor_sprites[p1_s], mouse_pos, Color(0.75, 0.75, 0.75, 0.75))
 
 
 func _input(event):

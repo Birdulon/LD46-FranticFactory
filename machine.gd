@@ -67,6 +67,8 @@ func _process(delta):
 			return
 		self.working = false
 		idle_time += delta
+		if idle_time >= max_idle_time:
+			$"/root/Main".game_over()
 		var overspeed = clamp(floor(idle_time/2)*2, 1, 8)
 		$sprite.material.set_shader_param('rps', overspeed*anim_speed)
 	else:
